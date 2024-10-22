@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Meta Tags for Responsive Design -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap CSS CDN -->
+  <link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-jcwy9wsm1Qwt34dS7-1Z0pPdTxJrf4pnXcHeRT2sox6AmjVgxwI6Xff5EZij1Rf"
+    crossorigin="anonymous"
+  />
+
+  <title>MBTI Questionnaire - Start</title>
+
+  <style>
+    /* Custom styles */
+    body {
+      background-color: #f8f9fa;
+    }
+
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .card {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+      border-color: #004494;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container form-container pt-5">
+    <div class="card p-4">
+      <h1 class="text-center mb-4">Welcome to the MBTI Questionnaire</h1>
+
+      <form action="/start" method="POST">
+        <div class="form-group mb-3">
+          <label for="name">Name:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            class="form-control"
+            placeholder="Enter your name"
+            required
+          >
+        </div>
+
+        <div class="form-group mb-3">
+          <label for="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form-control"
+            placeholder="Enter your email"
+            required
+          >
+        </div>
+
+        <div class="form-group mb-4">
+          <label for="gender">Gender:</label>
+          <select
+            id="gender"
+            name="gender"
+            class="form-control"
+            required
+          >
+            <option value="" disabled selected>Select your gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+            <option value="Prefer not to say">Prefer not to say</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">
+          Start Questionnaire
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS and dependencies -->
+  <script
+    src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdYJ63TppVfQvIE2ktxmg0x3sHMEwJYAvpV0JWlFEK0fek2Y5KkPEeD1hPCtO"
+    crossorigin="anonymous"
+  ></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-LtrjvnR4JutNfj+eKx4GA9A3G0iV7Ewq5FNVV5Hu7+df9Q89bUM+Iv6+8o8oq8P6"
+    crossorigin="anonymous"
+  ></script>
+</body>
+</html>
