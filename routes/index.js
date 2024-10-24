@@ -7,7 +7,7 @@ router.get('/', (req, res) => {
 });
 
 // POST request to handle form submission
-router.post('/start', (req, res) => {
+router.post('/submit', (req, res) => {
   const { name, email, gender } = req.body;
 
   // Simple validation
@@ -15,7 +15,6 @@ router.post('/start', (req, res) => {
     return res.status(400).send('All fields are required!');
   }
 
-  // For now, just send a response back (you can modify this later)
   res.send(`Received: Name - ${name}, Email - ${email}, Gender - ${gender}`);
 });
 

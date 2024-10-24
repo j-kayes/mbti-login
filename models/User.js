@@ -4,9 +4,9 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: String,
   gender: String,
-  answers: [Number],
-  type: String,
-  vector: [Number],
+  mbti_answers: [Number],
+  mbti_type: String,
+  mbti_vector: [Number],
 });
 
 module.exports = mongoose.model('User', userSchema);
