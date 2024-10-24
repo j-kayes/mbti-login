@@ -18,11 +18,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Mongoose connection to MongoDB
 const mongoURI = process.env.MONGO_URL || process.env.MONGODB_URI_LOCAL;
 
-if (!mongoURI) {
-  console.error('MongoDB connection string is undefined.');
-  process.exit(1);
-}
-
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
