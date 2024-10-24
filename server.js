@@ -15,15 +15,20 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Determine the MongoDB URI
-const mongoURI = process.env.MONGODB_URL || process.env.MONGODB_URI_LOCAL;
+// Mongoose connection to MongoDB
+const mongoURI = process.env.MONGO_URL || process.env.MONGODB_URI_LOCAL;
+
+if (!mongoURI) {
+  console.error('MongoDB connection string is undefined.');
+  process.exit(1);
+}
 
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
-.then(() => console.log(`Connected to MongoDB at ${mongoURI}`))
-.catch((err) => console.error('Error connecting to MongoDB:', err));
+  .then(() => console.log(`Connected to MongoDB at ${mongoURI}`))
+  .catch((err) => console.error('Error connecting to MongoDB:', err));
 
 // Define the User schema and model
 const userSchema = new mongoose.Schema({
