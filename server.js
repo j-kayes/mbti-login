@@ -81,63 +81,79 @@ app.post('/submit', async (req, res) => {
   }
 });
 
-// Route to get similar users
-app.get('/similar-users', async (req, res) => {
+app.get('/other-users', async (req, res) => {
+  const email = req.query.email;  // Get the current user's email from query parameters
+
   try {
-      // Fetch the current user's data (e.g., based on a session or a query parameter)
-      const currentUser = await User.findOne({ email: req.userEmail }); 
-      
-      if (!currentUser || !currentUser.mbtiVector) {
-          return res.json({ message: 'Please complete the quiz to find similar users.' });
-      }
+    // Find all users except the current user
+    const users = await User.find({ email: { $ne: email } });  // Exclude current user using $ne
 
-      // Fetch all other users from the database
-      const allUsers = await User.find({ _id: { $ne: currentUser._id } });  // Exclude the current user
-
-      const otherUserData = allUsers.map(user => {
-          return {
-              name: user.name,
-              email: user.email,
-              gender: user.gender,
-              mbti_answers: user.answers,
-              mbti_vector: user.mbtiVector,
-              mbti_type: user.type,
-          };
-      });
-
-      // Send the sorted list of users to the client
-      res.json({ users: otherUserData });
+    // Send the list of users as JSON
+    res.json({ users });
   } catch (error) {
-      console.error('Error fetching users:', error);
-      res.status(500).json({ error: 'An error occurred while fetching users.' });
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'An error occurred while fetching users.' });
   }
 });
 
-// POST route to save MBTI results
+
+// POST route to save MBTI results and render the result page
 app.post('/save-mbti', async (req, res) => {
-  const { mbti_type, mbti_vector, email } = req.body;  // Get data from the request body
+  const { mbti_type, mbti_vector, email } = req.body;
   console.log(req.body);
+
   try {
       // Find the user by their email
       const user = await User.findOne({ email });
       if (!user) {
-          console.log("user not found");
+          console.log("User not found");
           return res.status(404).json({ success: false, error: 'User not found.' });
       }
 
       // Update the user's MBTI type and vector
       user.mbti_type = mbti_type;
       user.mbti_vector = mbti_vector;
+
       // Save the updated user to the database
       await user.save();
 
-      // Send a success response
-      res.json({ success: true, message: 'MBTI results saved successfully.' });
+      // Fetch other users excluding the current user
+      const otherUsers = await User.find({ email: { $ne: email } });
+
+      // Render the results page, passing the current user's MBTI type and other users
+      res.render('results', { currentUser: user, otherUsers });
   } catch (error) {
-      console.error('Error saving MBTI vector:', error);
-      res.status(500).json({ success: false, error: 'Server error. Could not save MBTI results.' });
+      console.error('Error saving MBTI vector or fetching other users:', error);
+      res.status(500).send('Server error. Could not save MBTI results or fetch other users.');
   }
 });
+
+// Route to render the similar-users page with users having the same MBTI type
+app.get('/similar-users', async (req, res) => {
+  const email = req.query.email;  // Get the current user's email from the query parameters
+
+  try {
+    // Find the current user by email
+    const currentUser = await User.findOne({ email });
+
+    if (!currentUser) {
+      return res.status(404).send('Current user not found.');
+    }
+
+    // Find other users with the same MBTI type, excluding the current user
+    const otherUsers = await User.find({
+      mbti_type: currentUser.mbti_type,  // Find users with the same MBTI type
+      email: { $ne: email }              // Exclude the current user
+    });
+
+    // Render the EJS page and pass the current user and other users to the template
+    res.render('similar-users', { currentUser, otherUsers });
+  } catch (error) {
+    console.error('Error fetching similar users:', error);
+    res.status(500).send('An error occurred while fetching similar users.');
+  }
+});
+
 
 
 // Start the server

@@ -190,7 +190,6 @@ function calculateResults() {
     }
     // Display the results
     resultsElement.innerHTML = resultHTML;
-
     const urlParams = new URLSearchParams(window.location.search);
     fetch('/save-mbti', {
         method: 'POST',
@@ -203,16 +202,13 @@ function calculateResults() {
             mbti_vector: mbtiVectorObj
         }),
     })
-    .then(response => response.json())
-    .then(result => {
-        if (result.success) {
-            // MBTI vector saved successfully
-            console.log('MBTI vector saved successfully.');
-            console.log('MBTI vector: ' + mbtiVectorObj);
-            // Proceed to display results or next steps
+    .then(response => {
+        // Redirect to the similar-users page after the MBTI is saved
+        if (response.ok) {
+            window.location.href = `/similar-users?email=${urlParams.get('email')}`;
         } else {
             // Handle error
-            console.error('Error saving MBTI vector:', result.error);
+            console.error('Error saving MBTI vector:', response.statusText);
             alert('Error saving your results. Please try again.');
         }
     })
@@ -220,4 +216,6 @@ function calculateResults() {
         console.error('Error:', error);
         alert('An unexpected error occurred. Please try again.');
     });
+    
+    
 }

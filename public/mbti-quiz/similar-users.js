@@ -1,32 +1,35 @@
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('/similar-users', {
-        method: 'GET',
-        credentials: 'include', // Include cookies for authentication
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`Failed to fetch similar users: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.users && data.currentUser) {
-            displayUsers(data.users, data.currentUser.mbtiVector);
-        } else if(data.message){
+    // Define an empty array to store user data
+    let usersArray = [];
+
+    // Get the current user's email from the query string
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get('email');
+
+    // Fetch the users excluding the current user
+    fetch(`/other-users?email=${email}`)
+        .then(response => response.json())  // Parse the JSON response
+        .then(data => {
+            // Populate the array with user data
+            usersArray = data.users;
+
+            // Now use the array to populate the UI or perform other actions
             const usersList = document.getElementById('usersList');
-            usersList.innerHTML = `
-                <p>${data.message}</p>
-                <button id="quizButton" onclick="window.location.href='/mbti-quiz/main.htm'" class="button">Take the Quiz</button>
-            `;
-        } else {
-            console.error('Error fetching users:', data.error);
-            displayError('Unable to fetch similar users.');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        displayError('An error occurred while fetching similar users.');
-    });
+            if (usersArray.length > 0) {
+                usersArray.forEach(user => {
+                    const userDiv = document.createElement('div');
+                    userDiv.classList.add('user');
+                    userDiv.innerHTML = `<p><strong>${user.name}</strong> - ${user.mbti_type}</p>`;
+                    usersList.appendChild(userDiv);
+                });
+            } else {
+                usersList.innerHTML = '<p>No users found.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching users:', error);
+            document.getElementById('usersList').innerHTML = '<p>An error occurred while fetching users.</p>';
+        });
 });
 
 function calculateEuclideanDistance(vec1, vec2) {

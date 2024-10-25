@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Results</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Your MBTI Results</h2>
+    <p><strong>Name:</strong> <%= currentUser.name %></p>
+    <p><strong>Email:</strong> <%= currentUser.email %></p>
+    <p><strong>MBTI Type:</strong> <%= currentUser.mbti_type %></p>
+    
+    <h3>Other Users and Their MBTI Types</h3>
+    <div id="usersList">
+      <% if (otherUsers.length > 0) { %>
+        <% otherUsers.forEach(function(user) { %>
+          <div class="user-item">
+            <p><strong>Name:</strong> <%= user.name %></p>
+            <p><strong>Email:</strong> <%= user.email %></p>
+            <p><strong>MBTI Type:</strong> <%= user.mbti_type %></p>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p>No other users found.</p>
+      <% } %>
+    </div>
+
+    <button onclick="window.location.href='/dashboard.html'">Back to Dashboard</button>
+  </div>
+</body>
+</html>

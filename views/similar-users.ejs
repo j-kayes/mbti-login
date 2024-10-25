@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Similar Users</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Your MBTI Results</h2>
+    <p><strong>Name:</strong> <%= currentUser.name %></p>
+    <p><strong>Email:</strong> <%= currentUser.email %></p>
+    <p><strong>MBTI Type:</strong> <%= currentUser.mbti_type %></p>
+    <p><strong>MBTI Vector:</strong> [<%= currentUser.mbti_vector.join(', ') %>]</p>
+    
+    <h3>Other users (Ordered by Similarity)</h3>
+    <div id="usersList" data-current-user-vector="<%= JSON.stringify(currentUser.mbti_vector) %>">
+      <% if (otherUsers.length > 0) { %>
+        <% otherUsers.forEach(function(user) { %>
+          <div class="user-item" data-user-vector="<%= JSON.stringify(user.mbti_vector) %>">
+            <p><strong>Name:</strong> <%= user.name %></p>
+            <p><strong>Email:</strong> <%= user.email %></p>
+            <p><strong>MBTI Type:</strong> <%= user.mbti_type %></p>
+            <p><strong>MBTI Vector:</strong> [<%= user.mbti_vector.join(', ') %>]</p>
+            <p><strong>Euclidean Distance:</strong> <span class="distance"></span></p>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p>No other users found with the same MBTI type.</p>
+      <% } %>
+    </div>
+  </div>
+
+  <script>
+    // Function to calculate Euclidean distance between two vectors
+    function calculateEuclideanDistance(vec1, vec2) {
+      if (vec1.length !== vec2.length) {
+        console.error('Vectors have different lengths');
+        return null;
+      }
+      let sum = 0;
+      for (let i = 0; i < vec1.length; i++) {
+        const diff = vec1[i] - vec2[i];
+        sum += diff * diff;
+      }
+      return Math.sqrt(sum);
+    }
+
+    // Get the current user's vector from the data attribute
+    const usersList = document.getElementById('usersList');
+    const currentUserVector = JSON.parse(usersList.getAttribute('data-current-user-vector'));
+
+    // Collect user items and calculate distances
+    const userItems = Array.from(document.querySelectorAll('.user-item')).map(item => {
+      const userVector = JSON.parse(item.getAttribute('data-user-vector'));
+      const distance = calculateEuclideanDistance(currentUserVector, userVector);
+      return { element: item, distance: distance || Infinity };
+    });
+
+    // Sort users by distance
+    userItems.sort((a, b) => a.distance - b.distance);
+
+    // Clear the usersList div and re-append sorted items
+    usersList.innerHTML = '';
+    userItems.forEach(({ element, distance }) => {
+      element.querySelector('.distance').innerText = distance.toFixed(2);
+      usersList.appendChild(element);
+    });
+  </script>
+</body>
+</html>
