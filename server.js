@@ -59,6 +59,7 @@ app.post('/submit', async (req, res) => {
       return res.status(400).send('All fields are required!');
     }
 
+    console.log('Mongoose connection state:', mongoose.connection.readyState);
     // Check if a user with the same email already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -66,7 +67,6 @@ app.post('/submit', async (req, res) => {
     }
 
     // Create a new user instance
-
     const newUser = new User({ name, gender, email, mbti_answers: null, mbti_type: null, mbti_vector: null });
 
     // Save the new user to the database
@@ -95,7 +95,7 @@ app.get('/similar-users', async (req, res) => {
 
       // Calculate the Euclidean distance for each user
       const usersWithDistance = allUsers.map(user => {
-          const distance = calculateEuclideanDistance(currentUser.mbtiVector, user.mbtiVector);
+          //const distance = calculateEuclideanDistance(currentUser.mbtiVector, user.mbtiVector);
           return {
               name: user.name,
               email: user.email,
