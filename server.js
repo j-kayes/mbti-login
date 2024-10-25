@@ -18,6 +18,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Mongoose connection to MongoDB
 const mongoURI = process.env.MONGO_PUBLIC_URL || process.env.MONGODB_URI_LOCAL;
 
+mongoose.set('debug', true);
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
