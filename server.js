@@ -94,9 +94,7 @@ app.get('/similar-users', async (req, res) => {
       // Fetch all other users from the database
       const allUsers = await User.find({ _id: { $ne: currentUser._id } });  // Exclude the current user
 
-      // Calculate the Euclidean distance for each user
-      const usersWithDistance = allUsers.map(user => {
-          //const distance = calculateEuclideanDistance(currentUser.mbtiVector, user.mbtiVector);
+      const otherUserData = allUsers.map(user => {
           return {
               name: user.name,
               email: user.email,
@@ -104,18 +102,14 @@ app.get('/similar-users', async (req, res) => {
               mbti_answers: user.answers,
               mbti_vector: user.mbtiVector,
               mbti_type: user.type,
-              euclidian_distance: distance,
           };
       });
 
-      // Sort users by distance (closest first)
-      usersWithDistance.sort((a, b) => a.distance - b.distance);
-
       // Send the sorted list of users to the client
-      res.json({ users: usersWithDistance });
+      res.json({ users: otherUserData });
   } catch (error) {
-      console.error('Error fetching similar users:', error);
-      res.status(500).json({ error: 'An error occurred while fetching similar users.' });
+      console.error('Error fetching users:', error);
+      res.status(500).json({ error: 'An error occurred while fetching users.' });
   }
 });
 

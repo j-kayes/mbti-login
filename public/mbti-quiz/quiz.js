@@ -6,24 +6,36 @@ let totalQuestions = 0;
 document.addEventListener('DOMContentLoaded', (event) => {
     allQuestions = [
         { text: "I feel more energized by spending time by myself or by being around other people.", left: "By myself", right: "Around other people", key: "q2", dimension: 'introversion_extroversion' },
-        { text: "I tend to reflect deeply on my thoughts or seek external stimulation.", left: "Reflect deeply", right: "Seek stimulation", key: "q3", dimension: 'introversion_extroversion' },
+        { text: "When attending events, I feel energized by being around many people or prefer smaller, intimate gatherings.", left: "Smaller gatherings", right: "Many people", key: "q83", dimension: 'introversion_extroversion' },
         { text: "I usually prefer a few close friends or a wide circle of acquaintances.", left: "Few close friends", right: "Wide circle", key: "q6", dimension: 'introversion_extroversion' },
         { text: "I recharge by spending time alone or by interacting with others.", left: "Spending time alone", right: "Interacting with others", key: "q10", dimension: 'introversion_extroversion' },
 
         { text: "I tend to focus on tasks and goals or on relationships and people.", left: "Tasks and goals", right: "Relationships and people", key: "q21", dimension: 'thinking_feeling' },
         { text: "I prefer to understand systems and structures or understand the motivations and feelings of others.", left: "Systems and structures", right: "Motivations and feelings", key: "q26", dimension: 'thinking_feeling' },
         { text: "I value internal consistency and logical coherence or authenticity and staying true to oneself.", left: "Internal consistency", right: "Authenticity", key: "q27", dimension: 'thinking_feeling' },
-        { text: "I am more guided my by emotions or purely by logic and reason?", left: "Emptions", right: "Logic and reason", key: "q62", dimension: 'thinking_feeling' },
+        { text: "I am more guided my by emotions or purely by logic and reason?", left: "Logic and reason", right: "Emptions", key: "q62", dimension: 'thinking_feeling' },
 
-        { text: "I often imagine potential future scenarios or recall detailed past events.", left: "Future scenarios", right: "Past events", key: "q36", dimension: 'sensing_intuition' },
+        { text: "I prefer learning practical skills or exploring theoretical concepts.", left: "Theoretical concepts", right: "Practical skills", key: "q97", dimension: 'sensing_intuition' },
         { text: "I am excited by exploring new ideas and possibilities or by engaging in new physical experiences.", left: "Ideas and possibilities", right: "Physical experiences", key: "q39", dimension: 'sensing_intuition' },
         { text: "I enjoy theorizing about what could be or participating in real-world activities.", left: "Theorizing", right: "Real-world activities", key: "q41", dimension: 'sensing_intuition' },
         { text: "I like to engage in discussions about abstract concepts or in hands-on experiences.", left: "Abstract concepts", right: "Hands-on experiences", key: "q43", dimension: 'sensing_intuition' },
 
-        { text: "I prefer to plan and organize my activities or to go with the flow.", left: "Plan and organize", right: "Go with the flow", key: "q46", dimension: 'perceiving_judging' },
+        { text: "I feel more at ease when I have a detailed plan or when I can go with the flow.", left: "Have a detailed plan", right: "Go with the flow", key: "q94", dimension: 'perceiving_judging' },
         { text: "I like to make decisions early or to keep my options open.", left: "Make decisions early", right: "Keep options open", key: "q48", dimension: 'perceiving_judging' },
-        { text: "I like to have a sense of control over my life or to adapt to new situations as they arise.", left: "Sense of control", right: "Adapt to new situations", key: "q52", dimension: 'perceiving_judging' },
-        { text: "I like to have a plan for everything or to be spontaneous and adaptable.", left: "Plan for everything", right: "Spontaneous and adaptable", key: "q59", dimension: 'perceiving_judging' },
+        { text: "I prefer to stick to schedules or I like to be spontaneous and flexible with my time.", left: "Stick to schedules", right: "Be flexible with my time", key: "q87", dimension: 'perceiving_judging' },
+        { text: "I like to be adaptable and versatile to changing circumstances, or I like to anticipate and solve problems before they arise.", left: "Anticipate and solve", right: "Versatile to changing circumstances", key: "q59", dimension: 'perceiving_judging' },
+
+        { text: "I gain energy from interacting with large groups or from spending time alone.", left: "Spending time alone", right: "Interacting with groups", key: "q73", dimension: 'introversion_extroversion' },
+        { text: "I prefer to express my thoughts openly or reflect on them privately before sharing.", left: "Reflect privately", right: "Express openly", key: "q74", dimension: 'introversion_extroversion' },
+
+        { text: "I focus on concrete details and practical experiences or explore abstract concepts and future possibilities.", left: "Abstract concepts", right: "Concrete details", key: "q75", dimension: 'sensing_intuition' },
+        { text: "I rely on tried-and-true methods or enjoy experimenting with new ideas.", left: "Experimenting with new ideas", right: "Tried-and-true methods", key: "q76", dimension: 'sensing_intuition' },
+
+        { text: "I make decisions based on logical analysis or personal values and how it affects others.", left: "Logical analysis", right: "Personal values", key: "q77", dimension: 'thinking_feeling' },
+        { text: "I prioritize fairness and objective criteria or empathy and maintaining harmony.", left: "Fairness and objectivity", right: "Empathy and harmony", key: "q78", dimension: 'thinking_feeling' },
+
+        { text: "I prefer a flexible schedule or like to have things decided and settled.", left: "Decided and settled", right: "Flexible schedule", key: "q79", dimension: 'perceiving_judging' },
+        { text: "I am more comfortable adapting as new situations arise or following a detailed plan.", left: "Following a plan", right: "Adapting to new situations", key: "q80", dimension: 'perceiving_judging' },
     ];
 
     // Shuffle all questions
@@ -41,7 +53,7 @@ function shuffle(array) {
     }
 }
 
-function renderQuestions() {
+function renderQuestions() { 
     const container = document.getElementById('mbti-container');
     container.innerHTML = '<form id="mbti-form"></form>\n<div id="results" class="results"></div>';
     const form = document.getElementById('mbti-form');
