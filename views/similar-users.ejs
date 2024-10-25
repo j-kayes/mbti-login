@@ -8,12 +8,29 @@
 <body>
   <div class="container">
     <h2>Your MBTI Results</h2>
-    <p><strong>Name:</strong> <%= currentUser.name %></p>
-    <p><strong>Email:</strong> <%= currentUser.email %></p>
-    <p><strong>MBTI Type:</strong> <%= currentUser.mbti_type %></p>
-    <p><strong>MBTI Vector:</strong> [<%= currentUser.mbti_vector.join(', ') %>]</p>
+    <h3>Your MBTI Vector</h3>
+
+    <% let dimensionLabels = ['Introvert', 'Extrovert', 'Sensing', 'Intuition', 'Thinking', 'Feeling', 'Judging', 'Perceiving']; %>
     
-    <h3>Other users (Ordered by Similarity)</h3>
+    <% currentUser.mbti_vector.forEach(function(value, index) { %>
+      <div class="result-bar">
+        <div class="result-labels">
+          <span><%= dimensionLabels[index * 2] %></span> <!-- Left side label -->
+          <span><%= dimensionLabels[index * 2 + 1] %></span> <!-- Right side label -->
+        </div>
+        <div class="slider-container">
+          <div class="slider" style="left: <%= value %>%;"></div>
+        </div>
+      </div>
+    <% }) %>
+
+    <h3>Your MBTI Type: <%= currentUser.mbti_type %></h3>
+
+    <!-- Section Break for Clarity -->
+    <div class="section-divider" style="margin-top: 40px; padding-top: 20px; border-top: 3px solid #4CAF50;">
+      <h3>Other users (Ordered by Similarity):</h3>
+    </div>
+
     <div id="usersList" data-current-user-vector="<%= JSON.stringify(currentUser.mbti_vector) %>">
       <% if (otherUsers.length > 0) { %>
         <% otherUsers.forEach(function(user) { %>
@@ -21,7 +38,20 @@
             <p><strong>Name:</strong> <%= user.name %></p>
             <p><strong>Email:</strong> <%= user.email %></p>
             <p><strong>MBTI Type:</strong> <%= user.mbti_type %></p>
-            <p><strong>MBTI Vector:</strong> [<%= user.mbti_vector.join(', ') %>]</p>
+
+            <h4>MBTI Vector</h4>
+            <% user.mbti_vector.forEach(function(value, index) { %>
+              <div class="result-bar">
+                <div class="result-labels">
+                  <span><%= dimensionLabels[index * 2] %></span> <!-- Left side label -->
+                  <span><%= dimensionLabels[index * 2 + 1] %></span> <!-- Right side label -->
+                </div>
+                <div class="slider-container">
+                  <div class="slider" style="left: <%= value %>%;"></div>
+                </div>
+              </div>
+            <% }) %>
+
             <p><strong>Euclidean Distance:</strong> <span class="distance"></span></p>
           </div>
         <% }); %>
@@ -29,6 +59,8 @@
         <p>No other users found with the same MBTI type.</p>
       <% } %>
     </div>
+
+    <button onclick="window.location.href='/dashboard.html'">Back to Dashboard</button>
   </div>
 
   <script>
