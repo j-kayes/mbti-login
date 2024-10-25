@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Mongoose connection to MongoDB
-const mongoURI = process.env.MONGO_URL || process.env.MONGODB_URI_LOCAL;
+const mongoURI = process.env.MONGO_PUBLIC_URL || process.env.MONGODB_URI_LOCAL;
 
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
