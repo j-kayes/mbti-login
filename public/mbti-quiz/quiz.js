@@ -91,92 +91,66 @@ function calculateResults() {
         return;
     }
     if (unansweredQuestions.length > 0) {
-        // Display the list of unanswered questions in the HTML
         let resultHTML = '<h2>Your Results</h2>';
         resultHTML += `<p>Please answer the following questions before submitting:</p>`;
         resultHTML += `<p>Unanswered Questions: ${unansweredQuestions.join(', ')}</p>`;
         resultsElement.innerHTML = resultHTML;
-        return; // Exit the function if there are unanswered questions
+        return;
     }
 
     const form = document.getElementById('mbti-form');
     const formData = new FormData(form);
 
     let scores = {
-        Se_total: 0,
-        Se_n: 0,
-        Si_total: 0,
-        Si_n: 0,
-        Ne_total: 0,
-        Ne_n: 0,
-        Ni_total: 0,
-        Ni_n: 0,
-        Te_total: 0,
-        Te_n: 0,
-        Ti_total: 0,
-        Ti_n: 0,
-        Fe_total: 0,
-        Fe_n: 0,
-        Fi_total: 0,
-        Fi_n: 0,
+        Se_total: 0, Se_n: 0,
+        Si_total: 0, Si_n: 0,
+        Ne_total: 0, Ne_n: 0,
+        Ni_total: 0, Ni_n: 0,
+        Te_total: 0, Te_n: 0,
+        Ti_total: 0, Ti_n: 0,
+        Fe_total: 0, Fe_n: 0,
+        Fi_total: 0, Fi_n: 0,
     };
-    
 
-    // Calculate scores based on the selected questions
     formData.forEach((value, key) => {
         const question = selectedQuestions.find(q => q.key === key);
-        if (question) {
-            const dimension = question.dimension.trim(); // Ensure no extra spaces
+        if (question && question.dimension) {
+            const dimension = question.dimension.trim();
             scores[`${dimension}_total`] += parseFloat(value);
             scores[`${dimension}_n`]++;
         }
     });
 
-
     const functions = ['Se', 'Si', 'Ne', 'Ni', 'Te', 'Ti', 'Fe', 'Fi'];
     let functionScores = {};
     functions.forEach(func => {
-        if (scores[`${func}_n`] > 0) {
-            functionScores[func] = scores[`${func}_total`] / scores[`${func}_n`];
-        } else {
-            // TODO: Is this needed here?
-            functionScores[func] = 50; // Default to 50 if no questions were answered for a function
-        }
+        functionScores[func] = scores[`${func}_n`] > 0
+            ? scores[`${func}_total`] / scores[`${func}_n`]
+            : 50; // Default neutral score
     });
 
-    // Convert functionScores to an array of objects and sort them
-    let sortedFunctions = Object.entries(functionScores).map(([func, score]) => ({ func, score }));
-    sortedFunctions.sort((a, b) => b.score - a.score); // Sort in descending order
+    let sortedFunctions = Object.entries(functionScores)
+        .map(([func, score]) => ({ func, score }))
+        .sort((a, b) => b.score - a.score);
 
-    // DETERMINING TYPE HERE:
-    // Get the dominant and auxiliary functions
     const dominantFunction = sortedFunctions[0].func;
     const auxiliaryFunction = sortedFunctions[1].func;
-    // Determine I/E based on dominant function
+
     let iePreference = ['Se', 'Ne', 'Te', 'Fe'].includes(dominantFunction) ? 'E' : 'I';
-    // Determine S/N based on higher score between Sensing and Intuition functions
     let sensingScore = (functionScores['Se'] + functionScores['Si']) / 2;
     let intuitionScore = (functionScores['Ne'] + functionScores['Ni']) / 2;
     let snPreference = sensingScore >= intuitionScore ? 'S' : 'N';
-    // Determine T/F based on higher score between Thinking and Feeling functions
     let thinkingScore = (functionScores['Te'] + functionScores['Ti']) / 2;
     let feelingScore = (functionScores['Fe'] + functionScores['Fi']) / 2;
     let tfPreference = thinkingScore >= feelingScore ? 'T' : 'F';
-    // Determine J/P based on the orientation of the auxiliary function
-    let jpPreference;
-    if (iePreference === 'E') {
-        // For extraverts, the auxiliary function determines J/P
-        jpPreference = ['Te', 'Fe'].includes(auxiliaryFunction) ? 'J' : 'P';
-    } else {
-        // For introverts, the dominant function determines J/P
-        jpPreference = ['Ti', 'Fi'].includes(dominantFunction) ? 'J' : 'P';
-    }
-    // Assemble the MBTI type
+    let jpPreference = iePreference === 'E'
+        ? ['Te', 'Fe'].includes(auxiliaryFunction) ? 'J' : 'P'
+        : ['Ti', 'Fi'].includes(dominantFunction) ? 'J' : 'P';
+
     let mbtiType = iePreference + snPreference + tfPreference + jpPreference;
+    let isExactly50 = Object.values(functionScores).some(score => score === 50);
 
     let resultHTML = '<h2>Your Results</h2>';
-
-    // Display the function scores
     functions.forEach(func => {
         const percentage = functionScores[func];
         resultHTML += `
@@ -194,37 +168,31 @@ function calculateResults() {
     resultHTML += `<h3>Your MBTI Type: ${mbtiType}</h3>`;
 
     if (isExactly50) {
-        resultHTML += `<p>Your results indicate a 50/50 balance in one or more dimensions. This suggests that your type may be somewhere between two types, and further introspection might be necessary to determine your dominant preferences.</p>`;
+        resultHTML += `<p>Your results indicate a 50/50 balance in one or more dimensions. Further introspection may help identify your dominant preferences.</p>`;
     }
 
-    let mbtiVectorObj = functions.map(func => functionScores[func]);
-    // Display the results
     resultsElement.innerHTML = resultHTML;
+
     const urlParams = new URLSearchParams(window.location.search);
     fetch('/save-mbti', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            email: urlParams.get('email'), // Get the email from the URL.
+            email: urlParams.get('email'),
             mbti_type: mbtiType,
-            mbti_vector: mbtiVectorObj
+            mbti_vector: functions.map(func => functionScores[func])
         }),
     })
     .then(response => {
-        // Redirect to the similar-users page after the MBTI is saved
         if (response.ok) {
             window.location.href = `/similar-users?email=${urlParams.get('email')}`;
         } else {
-            // Handle error
             console.error('Error saving MBTI vector:', response.statusText);
             alert('Error saving your results. Please try again.');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('An unexpected error occurred. Please try again.');
+        resultsElement.innerHTML += '<p class="error">Error saving your results. Please try again later.</p>';
     });
-    
 }
