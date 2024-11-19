@@ -4,39 +4,33 @@ let unansweredQuestions = [];
 let totalQuestions = 0;
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    allQuestions = [
-        { text: "I feel more energized by spending time by myself or by being around other people.", left: "By myself", right: "Around other people", key: "q2", dimension: 'introversion_extroversion' },
-        { text: "When attending events, I feel energized by being around many people or prefer smaller, intimate gatherings.", left: "Smaller gatherings", right: "Many people", key: "q83", dimension: 'introversion_extroversion' },
-        { text: "I usually prefer a few close friends or a wide circle of acquaintances.", left: "Few close friends", right: "Wide circle", key: "q6", dimension: 'introversion_extroversion' },
-        { text: "I recharge by spending time alone or by interacting with others.", left: "Spending time alone", right: "Interacting with others", key: "q10", dimension: 'introversion_extroversion' },
-
-        { text: "I tend to focus on tasks and goals or on relationships and people.", left: "Tasks and goals", right: "Relationships and people", key: "q21", dimension: 'thinking_feeling' },
-        { text: "I prefer to understand systems and structures or understand the motivations and feelings of others.", left: "Systems and structures", right: "Motivations and feelings", key: "q26", dimension: 'thinking_feeling' },
-        { text: "I value internal consistency and logical coherence or authenticity and staying true to oneself.", left: "Internal consistency", right: "Authenticity", key: "q27", dimension: 'thinking_feeling' },
-        { text: "I am more guided my by emotions or purely by logic and reason?", left: "Logic and reason", right: "Emptions", key: "q62", dimension: 'thinking_feeling' },
-
-        { text: "I prefer learning practical skills or exploring theoretical concepts.", left: "Theoretical concepts", right: "Practical skills", key: "q97", dimension: 'sensing_intuition' },
-        { text: "I am excited by exploring new ideas and possibilities or by engaging in new physical experiences.", left: "Ideas and possibilities", right: "Physical experiences", key: "q39", dimension: 'sensing_intuition' },
-        { text: "I enjoy theorizing about what could be or participating in real-world activities.", left: "Theorizing", right: "Real-world activities", key: "q41", dimension: 'sensing_intuition' },
-        { text: "I like to engage in discussions about abstract concepts or in hands-on experiences.", left: "Abstract concepts", right: "Hands-on experiences", key: "q43", dimension: 'sensing_intuition' },
-
-        { text: "I feel more at ease when I have a detailed plan or when I can go with the flow.", left: "Have a detailed plan", right: "Go with the flow", key: "q94", dimension: 'perceiving_judging' },
-        { text: "I like to make decisions early or to keep my options open.", left: "Make decisions early", right: "Keep options open", key: "q48", dimension: 'perceiving_judging' },
-        { text: "I prefer to stick to schedules or I like to be spontaneous and flexible with my time.", left: "Stick to schedules", right: "Be flexible with my time", key: "q87", dimension: 'perceiving_judging' },
-        { text: "I like to be adaptable and versatile to changing circumstances, or I like to anticipate and solve problems before they arise.", left: "Anticipate and solve", right: "Versatile to changing circumstances", key: "q59", dimension: 'perceiving_judging' },
-
-        { text: "I gain energy from interacting with large groups or from spending time alone.", left: "Spending time alone", right: "Interacting with groups", key: "q73", dimension: 'introversion_extroversion' },
-        { text: "I prefer to express my thoughts openly or reflect on them privately before sharing.", left: "Reflect privately", right: "Express openly", key: "q74", dimension: 'introversion_extroversion' },
-
-        { text: "I focus on concrete details and practical experiences or explore abstract concepts and future possibilities.", left: "Abstract concepts", right: "Concrete details", key: "q75", dimension: 'sensing_intuition' },
-        { text: "I rely on tried-and-true methods or enjoy experimenting with new ideas.", left: "Experimenting with new ideas", right: "Tried-and-true methods", key: "q76", dimension: 'sensing_intuition' },
-
-        { text: "I make decisions based on logical analysis or personal values and how it affects others.", left: "Logical analysis", right: "Personal values", key: "q77", dimension: 'thinking_feeling' },
-        { text: "I prioritize fairness and objective criteria or empathy and maintaining harmony.", left: "Fairness and objectivity", right: "Empathy and harmony", key: "q78", dimension: 'thinking_feeling' },
-
-        { text: "I prefer a flexible schedule or like to have things decided and settled.", left: "Decided and settled", right: "Flexible schedule", key: "q79", dimension: 'perceiving_judging' },
-        { text: "I am more comfortable adapting as new situations arise or following a detailed plan.", left: "Following a plan", right: "Adapting to new situations", key: "q80", dimension: 'perceiving_judging' },
+    const allQuestions = [
+        {text: "I feel most alive when I’m fully immersed in hands-on, real-time activities.", dimension: "Se", left: "Strongly dissagree", right: "Strongly agree", key: "q1"},
+        {text: "I easily notice details in my environment that others might overlook.", dimension: "Se", left: "Strongly dissagree", right: "Strongly agree", key: "q2"},
+        {text: "I enjoy fast-paced environments where I can adapt to changes on the spot.", dimension: "Se", left: "Strongly dissagree", right: "Strongly agree", key: "q3"},
+        {text: "I find comfort in familiar routines and established traditions.", dimension: "Si", left: "Strongly dissagree", right: "Strongly agree", key: "q4"},
+        {text: "I prefer to rely on my past experiences to guide my decisions.", dimension: "Si", left: "Strongly dissagree", right: "Strongly agree", key: "q5"},
+        {text: "I enjoy reflecting on how current events relate to past memories or lessons.", dimension: "Si", left: "Strongly dissagree", right: "Strongly agree", key: "q6"},
+        {text: "I often connect seemingly unrelated ideas in creative ways.", dimension: "Ne", left: "Strongly dissagree", right: "Strongly agree", key: "q7"},
+        {text: "I enjoy brainstorming multiple possibilities before deciding on one.", dimension: "Ne", left: "Strongly dissagree", right: "Strongly agree", key: "q8"},
+        {text: "I feel energized by exploring potential outcomes and what-ifs.", dimension: "Ne", left: "Strongly dissagree", right: "Strongly agree", key: "q9"},
+        {text: "I often get sudden, deep insights about situations that feel meaningful.", dimension: "Ni", left: "Strongly dissagree", right: "Strongly agree", key: "q10"},
+        {text: "I prefer to focus on one clear vision or goal and work toward it.", dimension: "Ni", left: "Strongly dissagree", right: "Strongly agree", key: "q11"},
+        {text: "I enjoy uncovering the underlying patterns or truths in complex problems.", dimension: "Ni", left: "Strongly dissagree", right: "Strongly agree", key: "q12"},
+        {text: "I enjoy creating systems to make tasks and processes more efficient.", dimension: "Te", left: "Strongly dissagree", right: "Strongly agree", key: "q13"},
+        {text: "I feel accomplished when I can implement practical solutions to problems.", dimension: "Te", left: "Strongly dissagree", right: "Strongly agree", key: "q14"},
+        {text: "I like to organize people and resources to achieve clear, measurable goals.", dimension: "Te", left: "Strongly dissagree", right: "Strongly agree", key: "q15"},
+        {text: "I enjoy analyzing problems to uncover their underlying principles.", dimension: "Ti", left: "Strongly dissagree", right: "Strongly agree", key: "q16"},
+        {text: "I strive for consistency in my reasoning and logical coherence in my ideas.", dimension: "Ti", left: "Strongly dissagree", right: "Strongly agree", key: "q17"},
+        {text: "I feel most satisfied when I solve a complex problem through careful analysis.", dimension: "Ti", left: "Strongly dissagree", right: "Strongly agree", key: "q18"},
+        {text: "I feel fulfilled when I can help others feel understood and supported.", dimension: "Fe", left: "Strongly dissagree", right: "Strongly agree", key: "q19"},
+        {text: "I prioritize maintaining harmony in group dynamics and relationships.", dimension: "Fe", left: "Strongly dissagree", right: "Strongly agree", key: "q20"},
+        {text: "I often adjust my actions to meet the needs or expectations of others.", dimension: "Fe", left: "Strongly dissagree", right: "Strongly agree", key: "q21"},
+        {text: "I make decisions based on how well they align with my personal values.", dimension: "Fi", left: "Strongly dissagree", right: "Strongly agree", key: "q22"},
+        {text: "I often reflect deeply on what matters most to me, even if it differs from others.", dimension: "Fi", left: "Strongly dissagree", right: "Strongly agree", key: "q23"},
+        {text: "I feel most at peace when my actions reflect my authentic self.", dimension: "Fi", left: "Strongly dissagree", right: "Strongly agree", key: "q24"}
     ];
+    
 
     // Shuffle all questions
     shuffle(allQuestions);
@@ -109,72 +103,87 @@ function calculateResults() {
     const formData = new FormData(form);
 
     let scores = {
-        introversion_extroversion: 0,
-        introversion_extroversion_total: 0,
-        introversion_extroversion_n: 0,
-        sensing_intuition: 0,
-        sensing_intuition_total: 0,
-        sensing_intuition_n: 0,
-        thinking_feeling: 0,
-        thinking_feeling_n: 0,
-        thinking_feeling_total: 0,
-        perceiving_judging: 0,
-        perceiving_judging_n: 0,
-        perceiving_judging_total: 0
+        Se_total: 0,
+        Se_n: 0,
+        Si_total: 0,
+        Si_n: 0,
+        Ne_total: 0,
+        Ne_n: 0,
+        Ni_total: 0,
+        Ni_n: 0,
+        Te_total: 0,
+        Te_n: 0,
+        Ti_total: 0,
+        Ti_n: 0,
+        Fe_total: 0,
+        Fe_n: 0,
+        Fi_total: 0,
+        Fi_n: 0,
     };
+    
 
     // Calculate scores based on the selected questions
     formData.forEach((value, key) => {
         const question = selectedQuestions.find(q => q.key === key);
         if (question) {
-            scores[`${question.dimension}_total`] += parseFloat(value);
-            scores[`${question.dimension}_n`]++;
+            const dimension = question.dimension.trim(); // Ensure no extra spaces
+            scores[`${dimension}_total`] += parseFloat(value);
+            scores[`${dimension}_n`]++;
         }
     });
 
-    // Calculate averages for each dimension
-    for (const dimension of ['introversion_extroversion', 'sensing_intuition', 'thinking_feeling', 'perceiving_judging']) {
-        if (scores[`${dimension}_n`] > 0) {
-            scores[dimension] = scores[`${dimension}_total`] / scores[`${dimension}_n`];
+
+    const functions = ['Se', 'Si', 'Ne', 'Ni', 'Te', 'Ti', 'Fe', 'Fi'];
+    let functionScores = {};
+    functions.forEach(func => {
+        if (scores[`${func}_n`] > 0) {
+            functionScores[func] = scores[`${func}_total`] / scores[`${func}_n`];
         } else {
-            scores[dimension] = 50; // Default to 50 if no questions were answered for a dimension
+            // TODO: Is this needed here?
+            functionScores[func] = 50; // Default to 50 if no questions were answered for a function
         }
+    });
+
+    // Convert functionScores to an array of objects and sort them
+    let sortedFunctions = Object.entries(functionScores).map(([func, score]) => ({ func, score }));
+    sortedFunctions.sort((a, b) => b.score - a.score); // Sort in descending order
+
+    // DETERMINING TYPE HERE:
+    // Get the dominant and auxiliary functions
+    const dominantFunction = sortedFunctions[0].func;
+    const auxiliaryFunction = sortedFunctions[1].func;
+    // Determine I/E based on dominant function
+    let iePreference = ['Se', 'Ne', 'Te', 'Fe'].includes(dominantFunction) ? 'E' : 'I';
+    // Determine S/N based on higher score between Sensing and Intuition functions
+    let sensingScore = (functionScores['Se'] + functionScores['Si']) / 2;
+    let intuitionScore = (functionScores['Ne'] + functionScores['Ni']) / 2;
+    let snPreference = sensingScore >= intuitionScore ? 'S' : 'N';
+    // Determine T/F based on higher score between Thinking and Feeling functions
+    let thinkingScore = (functionScores['Te'] + functionScores['Ti']) / 2;
+    let feelingScore = (functionScores['Fe'] + functionScores['Fi']) / 2;
+    let tfPreference = thinkingScore >= feelingScore ? 'T' : 'F';
+    // Determine J/P based on the orientation of the auxiliary function
+    let jpPreference;
+    if (iePreference === 'E') {
+        // For extraverts, the auxiliary function determines J/P
+        jpPreference = ['Te', 'Fe'].includes(auxiliaryFunction) ? 'J' : 'P';
+    } else {
+        // For introverts, the dominant function determines J/P
+        jpPreference = ['Ti', 'Fi'].includes(dominantFunction) ? 'J' : 'P';
     }
+    // Assemble the MBTI type
+    let mbtiType = iePreference + snPreference + tfPreference + jpPreference;
 
-    const dimensions = [
-        { name: 'Introversion', score: scores.introversion_extroversion, opposite: 'Extraversion' },
-        { name: 'Intuition', score: scores.sensing_intuition, opposite: 'Sensing' },
-        { name: 'Thinking', score: scores.thinking_feeling, opposite: 'Feeling' },
-        { name: 'Judging', score: scores.perceiving_judging, opposite: 'Perceiving' }
-    ];
-
-    let mbtiType = '';
-    let isExactly50 = false;
-
-    let mbtiVectorObj = [];
-    // Determine MBTI type and check for balanced dimensions
-    dimensions.forEach(dimension => {
-        mbtiVectorObj.push(dimension.score);
-        if (dimension.score === 50) {
-            isExactly50 = true;
-        }
-        if (dimension.opposite === 'Sensing') {
-            mbtiType += (dimension.score > 50 ? 'S' : 'N');
-        } else {
-            mbtiType += (dimension.score > 50 ? dimension.opposite.charAt(0) : dimension.name.charAt(0));
-        }
-    });
-
-    // Generate the results HTML
     let resultHTML = '<h2>Your Results</h2>';
 
-    dimensions.forEach(dimension => {
-        const percentage = dimension.score;
+    // Display the function scores
+    functions.forEach(func => {
+        const percentage = functionScores[func];
         resultHTML += `
             <div class="result-bar">
                 <div class="result-labels">
-                    <span>${dimension.name}</span>
-                    <span>${dimension.opposite}</span>
+                    <span>${func}</span>
+                    <span>${percentage.toFixed(2)}%</span>
                 </div>
                 <div class="slider-container">
                     <div class="slider" style="left: ${percentage}%;"></div>
@@ -182,12 +191,13 @@ function calculateResults() {
             </div>
         `;
     });
-
     resultHTML += `<h3>Your MBTI Type: ${mbtiType}</h3>`;
 
     if (isExactly50) {
         resultHTML += `<p>Your results indicate a 50/50 balance in one or more dimensions. This suggests that your type may be somewhere between two types, and further introspection might be necessary to determine your dominant preferences.</p>`;
     }
+
+    let mbtiVectorObj = functions.map(func => functionScores[func]);
     // Display the results
     resultsElement.innerHTML = resultHTML;
     const urlParams = new URLSearchParams(window.location.search);
@@ -216,6 +226,5 @@ function calculateResults() {
         console.error('Error:', error);
         alert('An unexpected error occurred. Please try again.');
     });
-    
     
 }
