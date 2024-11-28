@@ -154,6 +154,7 @@ function calculateResults() {
         .map(([func, score]) => ({ func, score }))
         .sort((a, b) => b.score - a.score);
 
+    // TODO: This isn't currently calculating the type correctly:
     const dominantFunction = sortedFunctions[0].func;
     const dominantToTypes = {
         'Ni': ['INTJ:Te','INFJ:Fe'],
