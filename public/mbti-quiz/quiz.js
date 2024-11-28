@@ -51,7 +51,11 @@ function renderQuestions() {
     const container = document.getElementById('mbti-container');
     container.innerHTML = '<form id="mbti-form"></form>\n<div id="results" class="results"></div>';
     const form = document.getElementById('mbti-form');
-    
+
+    // Add instructions at the top
+    form.innerHTML += '<h2>MBTI Cognitive Functions Test</h2>';
+    form.innerHTML += '<p>Please indicate your level of agreement with each statement by moving the slider. There are no right or wrong answers.</p>';
+
     selectedQuestions.forEach((q, index) => {
         const questionNumber = index + 1;
         unansweredQuestions.push(questionNumber); // Add all questions to the list initially
@@ -60,8 +64,8 @@ function renderQuestions() {
                 <label for="${q.key}">${index + 1}. ${q.text}</label>
                 <input type="range" id="${q.key}" name="${q.key}" min="0" max="100" value="50" oninput="markAnswered('${q.key}', ${questionNumber})" onchange="markAnswered('${q.key}', ${questionNumber})">
                 <div class="range-labels">
-                    <span>${q.left}</span>
-                    <span>${q.right}</span>
+                    <span>Less agreement</span>
+                    <span>More agreement</span>
                 </div>
                 <span id="tick-${q.key}" class="tick-mark"></span>
             </div>
@@ -71,6 +75,7 @@ function renderQuestions() {
 
     form.innerHTML += '<button id="submit-button" type="button" onclick="calculateResults()">Submit</button>';
 }
+
 
 function markAnswered(key, questionNumber) {
     const tick = document.getElementById(`tick-${key}`);
@@ -129,25 +134,58 @@ function calculateResults() {
             : 50; // Default neutral score
     });
 
+    // Define function attitudes and types
+    const functionAttitudes = {
+        'Se': 'E', 'Si': 'I',
+        'Ne': 'E', 'Ni': 'I',
+        'Te': 'E', 'Ti': 'I',
+        'Fe': 'E', 'Fi': 'I',
+    };
+
+    const functionTypes = {
+        'Se': 'Perceiving', 'Si': 'Perceiving',
+        'Ne': 'Perceiving', 'Ni': 'Perceiving',
+        'Te': 'Judging', 'Ti': 'Judging',
+        'Fe': 'Judging', 'Fi': 'Judging',
+    };
+
+    // Find the dominant function
     let sortedFunctions = Object.entries(functionScores)
         .map(([func, score]) => ({ func, score }))
         .sort((a, b) => b.score - a.score);
 
     const dominantFunction = sortedFunctions[0].func;
-    const auxiliaryFunction = sortedFunctions[1].func;
-
-    let iePreference = ['Se', 'Ne', 'Te', 'Fe'].includes(dominantFunction) ? 'E' : 'I';
-    let sensingScore = (functionScores['Se'] + functionScores['Si']) / 2;
-    let intuitionScore = (functionScores['Ne'] + functionScores['Ni']) / 2;
-    let snPreference = sensingScore >= intuitionScore ? 'S' : 'N';
-    let thinkingScore = (functionScores['Te'] + functionScores['Ti']) / 2;
-    let feelingScore = (functionScores['Fe'] + functionScores['Fi']) / 2;
-    let tfPreference = thinkingScore >= feelingScore ? 'T' : 'F';
-    let jpPreference = iePreference === 'E'
-        ? ['Te', 'Fe'].includes(auxiliaryFunction) ? 'J' : 'P'
-        : ['Ti', 'Fi'].includes(dominantFunction) ? 'J' : 'P';
-
-    let mbtiType = iePreference + snPreference + tfPreference + jpPreference;
+    const dominantToTypes = {
+        'Ni': ['INTJ:Te','INFJ:Fe'],
+        'Si': ['ISTJ:Te', 'ISFJ:Fe'],
+        'Ti': ['INTP:Ne', 'ISTP:Se'],
+        'Fi': ['ISFP:Se','INFP:Ne'],
+        'Ne': ['ENTP:Ti','ENFP:Fi'],
+        'Te': ['ENTJ:Ni','ESTJ:Si'],
+        'Se': ['ENFJ:Si', 'ESFP:Fi'],
+        'Fe': ['ENFJ:Ni','ESFJ:Si']
+    };
+    sortedFunctions.shift();
+    let possibleTypes = dominantToTypes[dominantFunction];
+    let mbtiType;
+    let typeFound = false;
+    possibleTypes.forEach(typeString => {
+        let auxillary = typeString.slice(5);
+        sortedFunctions.forEach(cognitiveFuncObj => {
+            if(cognitiveFuncObj.func==auxillary){
+                mbtiType=typeString.slice(0, -3);
+                typeFound = true;
+                return;
+            }
+        });
+        if(typeFound){
+            return;
+        }
+    });
+    if (!mbtiType) {
+        mbtiType = 'ERROR CALCULATING TYPE';
+        console.warn(`MBTI type could not be determined for possible types: ${possibleTypes}`);
+    }
     let isExactly50 = Object.values(functionScores).some(score => score === 50);
 
     let resultHTML = '<h2>Your Results</h2>';
@@ -168,7 +206,7 @@ function calculateResults() {
     resultHTML += `<h3>Your MBTI Type: ${mbtiType}</h3>`;
 
     if (isExactly50) {
-        resultHTML += `<p>Your results indicate a 50/50 balance in one or more dimensions. Further introspection may help identify your dominant preferences.</p>`;
+        resultHTML += `<p>Your results indicate a 50/50 balance in one or more functions. Further introspection may help identify your dominant preferences.</p>`;
     }
 
     resultsElement.innerHTML = resultHTML;
@@ -180,7 +218,7 @@ function calculateResults() {
         body: JSON.stringify({
             email: urlParams.get('email'),
             mbti_type: mbtiType,
-            mbti_vector: functions.map(func => functionScores[func])
+            mbti_vector: functions.map(func => functionScores[func]),
         }),
     })
     .then(response => {

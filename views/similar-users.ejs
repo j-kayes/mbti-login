@@ -10,13 +10,13 @@
     <h2>Your MBTI Results</h2>
     <h3>Your MBTI Vector</h3>
 
-    <% let dimensionLabels = ['Introvert', 'Extrovert', 'Sensing', 'Intuition', 'Thinking', 'Feeling', 'Judging', 'Perceiving']; %>
+    <% let dimensionLabels = ['Se', 'Si', 'Ne', 'Ni', 'Te', 'Ti', 'Fe', 'Fi']; %>
     
     <% currentUser.mbti_vector.forEach(function(value, index) { %>
       <div class="result-bar">
         <div class="result-labels">
-          <span><%= dimensionLabels[index * 2] %></span> <!-- Left side label -->
-          <span><%= dimensionLabels[index * 2 + 1] %></span> <!-- Right side label -->
+          <span></span>
+          <span><%= dimensionLabels[index]; %></span>
         </div>
         <div class="slider-container">
           <div class="slider" style="left: <%= value %>%;"></div>
@@ -43,8 +43,8 @@
             <% user.mbti_vector.forEach(function(value, index) { %>
               <div class="result-bar">
                 <div class="result-labels">
-                  <span><%= dimensionLabels[index * 2] %></span> <!-- Left side label -->
-                  <span><%= dimensionLabels[index * 2 + 1] %></span> <!-- Right side label -->
+                  <span></span>
+                  <span><%= dimensionLabels[index] %></span> 
                 </div>
                 <div class="slider-container">
                   <div class="slider" style="left: <%= value %>%;"></div>
