@@ -3,7 +3,7 @@ const router = express.Router();
 
 // GET request for the home page (index)
 router.get('/', (req, res) => {
-  res.render('index'); // Renders 'views/index.ejs'
+  res.render('register'); // Renders 'views/register.ejs'
 });
 
 // POST request to handle form submission

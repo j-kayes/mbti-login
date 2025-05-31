@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
+const bcrypt = require('bcrypt');  // Add bcrypt for password hashing
 require('dotenv').config();  // Load environment variables from .env
 
 const app = express();
@@ -31,6 +32,7 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   gender: { type: String, required: true },
   email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },  // Add password field
   mbti_answers: { type: [Number], required: false, default: null},
   mbti_type: { type: String, required: false, default: null},
   mbti_vector: { type: [Number], required: false, default: null},
@@ -41,7 +43,12 @@ const User = mongoose.model('User', userSchema);
 
 // Render the registration form using EJS
 app.get('/', (req, res) => {
-  res.render('index');  // Renders 'views/index.ejs'
+  res.render('register');  // Renders 'views/register.ejs'
+});
+
+// Render the login form using EJS
+app.get('/login', (req, res) => {
+  res.render('login');  // Renders 'views/login.ejs'
 });
 
 app.get('/quiz', (req, res) => {
@@ -51,16 +58,18 @@ app.get('/quiz', (req, res) => {
 
 // POST route to handle form submission and save data to the database
 app.post('/submit', async (req, res) => {
-  const { name, gender, email } = req.body;
-  console.log('Received form data:', { name, gender, email, mbti_answers: null, mbti_type: null, mbti_vector: null });  // Log the received data
+  const { name, gender, email, password } = req.body;  // Include password
+  console.log('Received form data:', { name, gender, email, password });  // Log the received data
 
   try {
     // Ensure all required fields are filled
-    if (!name || !gender || !email) {
+    if (!name || !gender || !email || !password) {
       return res.status(400).send('All fields are required!');
     }
 
-    console.log('Mongoose connection state:', mongoose.connection.readyState);
+    // Hash the password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // Check if a user with the same email already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -68,7 +77,7 @@ app.post('/submit', async (req, res) => {
     }
 
     // Create a new user instance
-    const newUser = new User({ name, gender, email, mbti_answers: null, mbti_type: null, mbti_vector: null });
+    const newUser = new User({ name, gender, email, password: hashedPassword });
 
     // Save the new user to the database
     await newUser.save();
@@ -77,6 +86,31 @@ app.post('/submit', async (req, res) => {
     res.redirect(`/quiz?name=${name}&email=${email}&gender=${gender}`);
   } catch (error) {
     console.error('Error saving user data:', error);
+    res.status(500).send('Server error. Please try again later.');
+  }
+});
+
+// POST route to handle login
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Find the user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).send('User not found.');
+    }
+
+    // Compare the provided password with the stored hashed password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).send('Invalid credentials.');
+    }
+
+    // Redirect to the quiz page upon successful login
+    res.redirect(`/quiz?name=${user.name}&email=${user.email}&gender=${user.gender}`);
+  } catch (error) {
+    console.error('Error during login:', error);
     res.status(500).send('Server error. Please try again later.');
   }
 });
@@ -140,9 +174,8 @@ app.get('/similar-users', async (req, res) => {
       return res.status(404).send('Current user not found.');
     }
 
-    // Find other users with the same MBTI type, excluding the current user
+    // Find other users:
     const otherUsers = await User.find({
-      mbti_type: currentUser.mbti_type,  // Find users with the same MBTI type
       email: { $ne: email }              // Exclude the current user
     });
 
@@ -153,8 +186,6 @@ app.get('/similar-users', async (req, res) => {
     res.status(500).send('An error occurred while fetching similar users.');
   }
 });
-
-
 
 // Start the server
 const PORT = process.env.PORT || 3000;
