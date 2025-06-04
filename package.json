@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "Basic prototype web appliction with MBTI questionaire with a sliding scale accross each of the 4 dimensions (I/E, N/S, T/F and P/J) and a simple Euclidian distance used to calculte the similatrity between other \r users on the site.",
   "main": "server.js",
-<<<<<<< HEAD
   "dependencies": {
     "accepts": "^1.3.8",
     "ansi-styles": "^4.3.0",
@@ -118,21 +117,4 @@
     "url": "https://github.com/j-kayes/mbti-simple/issues"
   },
   "homepage": "https://github.com/j-kayes/mbti-simple#readme"
-=======
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "",
-  "description": "",
-  "dependencies": {
-    "dotenv": "^16.4.7",
-    "ejs": "^3.1.10",
-    "express": "^4.21.2",
-    "express-session": "^1.18.1",
-    "mongoose": "^8.10.0",
-    "path": "^0.12.7"
-  }
->>>>>>> 01181f03479b7fe3c78020efda574b7d19fbd123
 }
