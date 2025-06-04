@@ -69,7 +69,7 @@ app.post('/submit', async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({ name, gender, email, password: hashedPassword });
-
+    
     await newUser.save();
     res.redirect(`/quiz?name=${name}&email=${email}&gender=${gender}`);
   } catch (error) {
@@ -150,7 +150,6 @@ app.get('/similar-users', async (req, res) => {
     }
 
     const otherUsers = await User.find({
-      mbti_type: currentUser.mbti_type,
       email: { $ne: email }
     });
 
