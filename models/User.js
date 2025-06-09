@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: String,
   gender: String,
+  password: String,
   mbti_answers: [Number],
   mbti_type: String,
   mbti_vector: [Number],
