@@ -1,10 +1,18 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const User = require('../models/User'); // Import User model
 
+const rateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // Limit each IP to 5 login attempts per windowMs
+  message: 'Too many server requests. Please try again later.'
+});
+
 // Registration route
 router.get('/register', (req, res) => res.render('register'));
+router.use('/submit', rateLimiter)
 router.post('/submit', async (req, res) => {
   const { name, gender, email, password } = req.body;
 
@@ -30,6 +38,7 @@ router.post('/submit', async (req, res) => {
 });
 
 // Login route
+router.use('/login', rateLimiter)
 router.get('/login', (req, res) => res.render('login', { error: null }));
 
 //Login route
@@ -38,7 +47,7 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Ensure email and password are provided
+    // Ensure email and password are provided'
     if (!email || !password) {
       return res.status(400).render('login', { error: 'Email and password are required.' });
     }
