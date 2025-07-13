@@ -1,0 +1,257 @@
+/* General Styles */
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9; /* Optional: Add a subtle background color */
+  }
+
+  /* Container Styles */
+  .container {
+    background: white;
+    padding: 30px 40px; /* Increased padding for better usability */
+    border-radius: 10px; /* Adjusted for consistency */
+    border: 1px solid #ccc;
+    max-width: 500px;
+    width: 100%;
+    margin: 20px auto; /* Ensures proper spacing */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .container.form-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 30px 40px; /* Increased padding for better usability */
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+
+  /* Heading Styles */
+  h1, h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  /* Label Styles */
+  label {
+    display: block;
+    margin-bottom: 5px;
+    text-align: left; /* Align text to the left */
+    font-weight: bold; /* Optional: Make labels bold for better visibility */
+  }
+
+  /* Question Styles */
+  .question {
+    margin-bottom: 15px;
+  }
+
+  /* Button Styles */
+  button {
+    display: block;
+    width: 100%; /* Match the width of input fields */
+    padding: 10px;
+    background-color: #4CAF50; /* Green color consistent with site */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+
+  button:hover {
+    background-color: #6ea870; /* Matching hover color */
+  }
+
+  .form-group:last-of-type button {
+    margin-top: 0; /* Remove extra margin for better alignment */
+  }
+
+  .form-group button {
+    width: 100%; /* Ensure the button width matches the input fields */
+    margin-left: 0; /* Remove left margin to align with input fields */
+  }
+
+  /* Form Input Styles */
+  input[type="text"], input[type="password"], input[type="email"] {
+    padding: 0px;
+    margin: 0px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* Message Styles */
+  #message {
+    margin-top: 15px;
+    color: red;
+  }
+
+  /* Results Styles */
+  .results {
+    margin-top: 20px;
+  }
+
+  .result-bar {
+    margin-bottom: 20px;
+  }
+
+  .result-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1em;
+    font-weight: bold;
+  }
+
+  /* Slider Styles */
+
+  /* Base style for the range input */
+  input[type="range"] {
+    -webkit-appearance: none; /* Removes default styling in WebKit browsers */
+    width: 100%;
+    margin: 10px 0;
+    background: transparent;  /* Removes default background */
+  }
+
+  input[type="range"]:focus {
+    outline: none; /* Removes outline on focus */
+  }
+
+  /* Track Styles */
+  input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 8px;
+    background: #ddd; /* Color of the track */
+    border-radius: 4px;
+  }
+
+  input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 8px;
+    background: #ddd;
+    border-radius: 4px;
+  }
+
+  input[type="range"]::-ms-track {
+    width: 100%;
+    height: 8px;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+  }
+
+  /* Thumb Styles */
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 24px;
+    width: 24px;
+    background-color: #4CAF50; /* Green color consistent with buttons */
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -8px; /* Centers the thumb on the track */
+    transition: background-color 0.3s ease;
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    height: 24px;
+    width: 24px;
+    background-color: #4CAF50;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  input[type="range"]::-ms-thumb {
+    height: 24px;
+    width: 24px;
+    background-color: #4CAF50;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  /* Hover and Active States for Thumb */
+  input[type="range"]:hover::-webkit-slider-thumb {
+    background-color: #45a049; /* Matching hover color */
+  }
+
+  input[type="range"]:hover::-moz-range-thumb {
+    background-color: #45a049;
+  }
+
+  input[type="range"]:hover::-ms-thumb {
+    background-color: #45a049;
+  }
+
+  input[type="range"]:active::-webkit-slider-thumb {
+    background-color: #388E3C; /* Darker green when active */
+  }
+
+  input[type="range"]:active::-moz-range-thumb {
+    background-color: #388E3C;
+  }
+
+  input[type="range"]:active::-ms-thumb {
+    background-color: #388E3C;
+  }
+
+  /* Range Labels */
+  .range-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9em;
+    color: #555;
+    margin-bottom: 5px;
+  }
+
+  /* Tick Mark Styles */
+  .tick-mark {
+    font-size: 20px;
+    color: green;
+    visibility: hidden;
+    margin-top: 5px;
+  }
+
+  .tick-mark.answered {
+    visibility: visible;
+  }
+
+  .slider-container {
+    position: relative;
+    height: 10px;
+    background: #ccc;
+    border-radius: 5px;
+    margin: 10px 0;
+  }
+
+  .slider {
+    position: absolute;
+    top: -5px;
+    height: 20px;
+    width: 20px;
+    background: #388E3C;
+    border-radius: 50%;
+  }
+
+  /* Form Group Styles */
+  .form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  label {
+    width: 120px; /* Slightly wider for better alignment */
+    margin-right: 15px; /* Add spacing between label and input */
+    text-align: right; /* Align text to the right */
+    font-weight: bold; /* Optional: Make labels bold for better visibility */
+  }
+
+  input[type="text"], input[type="password"], input[type="email"], select {
+    flex: 1; /* Allow input fields to take up remaining space */
+    padding: 10px; /* Increased padding for better usability */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
